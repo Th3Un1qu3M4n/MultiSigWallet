@@ -5,17 +5,20 @@ const ethers = hre.ethers;
 const { expect } = chai;
 
 describe("MultiSigWallet: ", function () {
-  let MultiSigWallet, multiSigWallet, owner, addr1, addr2;
+  let MultiSigWallet, multiSigWallet, Greeter, greeter, owner, addr1, addr2;
 
   before(async () => {
     MultiSigWallet = await ethers.getContractFactory('MultiSigWallet');
+    Greeter = await ethers.getContractFactory('Greeter');
     
     [owner, addr1, addr2, _] = await ethers.getSigners();
     // console.log(owner.address)
 
     multiSigWallet = await MultiSigWallet.deploy([owner.address, addr1.address], 2);
+    greeter = await Greeter.deploy("Initial Greet");
 
     console.log("\tMutiSigWallet Contract Address: "+multiSigWallet.address)
+    console.log("\tGreeter Contract Address: "+greeter.address)
 
   });
 
@@ -86,24 +89,31 @@ describe("MultiSigWallet: ", function () {
       const tx = await multiSigWallet.connect(addr1).executeTransaction(0)
       const receipt = await tx.wait();
       expect(receipt.events[0].event).to.be.equal('ExecuteTransaction');
-      console.log("\n\n\t",receipt.events[0].event, ""+receipt.events[0].args[0]+" ,  "+receipt.events[0].args[1]+" ,  "+receipt.events[0].args[2]) 
+      console.log("\n\t",receipt.events[0].event, ""+receipt.events[0].args[0]+" ,  "+receipt.events[0].args[1]+" ,  "+receipt.events[0].args[2]) 
     });
 
     
 
     it('Should submit and execute another transaction to wallet', async () => {
 
-      const inputData = "0x2e7700f0" // Get Transcation Cout
-      await multiSigWallet.connect(addr1).submitTransaction(multiSigWallet.address, 0, inputData);
+      // Set Greeting to "Greeting from MultiSigWallet"
+      const inputData = "0xa41368620000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000001c4772656574696e672066726f6d204d756c746953696757616c6c657400000000"
+      await multiSigWallet.connect(addr1).submitTransaction(greeter.address, 0, inputData);
       await multiSigWallet.confirmTransaction(1);
       await multiSigWallet.connect(addr1).confirmTransaction(1);
 
       const tx = await multiSigWallet.connect(owner).executeTransaction(1)
       const receipt = await tx.wait();
       expect(receipt.events[0].event).to.be.equal('ExecuteTransaction');
-      console.log("\n\n\t",receipt.events[0].event, ""+receipt.events[0].args[0]+" ,  "+receipt.events[0].args[1]+" ,  "+receipt.events[0].args[2]) 
+      console.log("\n\t",receipt.events[0].event, ""+receipt.events[0].args[0]+" ,  "+receipt.events[0].args[1]+" ,  "+receipt.events[0].args[2]) 
 
      
+    });
+
+    it("Should return the new greeting once it's changed", async function () {
+      const greeting = await await greeter.greet();
+      console.log("\n\tcontract reply: \t"+greeting)
+      expect(greeting).to.equal("Greeting from MultiSigWallet");
     });
 
 

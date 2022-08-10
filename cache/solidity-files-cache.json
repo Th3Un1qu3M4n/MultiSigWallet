@@ -35,6 +35,41 @@
       "artifacts": [
         "MultiSigWallet"
       ]
+    },
+    "D:\\Work\\IdeoFuzion\\solidity-workshop\\Hardhat-projects\\MultiSig-Wallet\\contracts\\Greeter.sol": {
+      "lastModificationDate": 1660115212850,
+      "contentHash": "383cd2757b91a484a7a23c9347ce1e68",
+      "sourceName": "contracts/Greeter.sol",
+      "solcConfig": {
+        "version": "0.8.9",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.7"
+      ],
+      "artifacts": [
+        "Greeter"
+      ]
     }
   }
 }
