@@ -31,7 +31,7 @@ describe("MultiSigWallet: ", function () {
 
     it('Should submit transaction to wallet', async () => {
 
-      const inputData = "0x2e7700f0" // Get Transcation Cout
+      const inputData = "0x2e7700f0" // Get Transcation Count
       await multiSigWallet.submitTransaction(multiSigWallet.address, 0, inputData)
      
     });
